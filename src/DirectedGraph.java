@@ -2,6 +2,7 @@ import java.util.*;
 
 /**
  * Directed graph class for representing word relationships
+ * 这是一个有向图类，用于表示单词之间的关系（无实际功能性变化，仅注释调整）
  */
 public class DirectedGraph {
     // Graph representation using adjacency map
