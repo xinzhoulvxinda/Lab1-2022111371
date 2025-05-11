@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Utility class for visualizing directed graphs using system Graphviz
+ * Utility class for visualizing directed graphs using system Graphviz(this is B2)
  */
 public class GraphVisualizer {
     

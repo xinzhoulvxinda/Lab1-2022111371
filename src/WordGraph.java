@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Main class implementing all required functionality
+ * Main class implementing all required functionality(this is B2)
  */
 public class WordGraph {
     private DirectedGraph graph;
