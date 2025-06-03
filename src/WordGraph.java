@@ -93,6 +93,14 @@ public class WordGraph {
      * @return Query result
      */
     public String queryBridgeWords(String word1, String word2) {
+        // 添加输入验证
+        if (word1 == null || word2 == null) {
+            return "Error: Input words cannot be null.";
+        }
+        if (word1.isEmpty() || word2.isEmpty()) {
+            return "No " + word1 + " or " + word2 + " in the graph!";
+        }
+        
         word1 = word1.toLowerCase();
         word2 = word2.toLowerCase();
         
