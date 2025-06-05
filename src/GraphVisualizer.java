@@ -1,4 +1,5 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -17,7 +18,7 @@ public class GraphVisualizer {
         
         // 添加所有节点
         for (String node : graph.getNodes()) {
-            dot.append(String.format("    \"%s\";\n", node));
+            dot.append(String.format("    \"%s\";%n", node));
         }
         
         // 添加所有边
@@ -26,7 +27,7 @@ public class GraphVisualizer {
             for (Map.Entry<String, Integer> edge : edges.entrySet()) {
                 String toNode = edge.getKey();
                 int weight = edge.getValue();
-                dot.append(String.format("    \"%s\" -> \"%s\" [label=\"%d\"];\n", 
+                dot.append(String.format("    \"%s\" -> \"%s\" [label=\"%d\"];%n",
                     fromNode, toNode, weight));
             }
         }
@@ -47,7 +48,7 @@ public class GraphVisualizer {
         // 添加所有节点，路径中的节点用红色填充
         for (String node : graph.getNodes()) {
             String color = path.contains(node.toLowerCase()) ? "lightpink" : "lightgray";
-            dot.append(String.format("    \"%s\" [fillcolor=%s];\n", node, color));
+            dot.append(String.format("    \"%s\" [fillcolor=%s];%n", node, color));
         }
         
         // 添加所有边，路径中的边用红色
@@ -69,7 +70,7 @@ public class GraphVisualizer {
                 
                 String color = isPathEdge ? "red" : "black";
                 String penwidth = isPathEdge ? "2.0" : "1.0";
-                dot.append(String.format("    \"%s\" -> \"%s\" [label=\"%d\",color=%s,penwidth=%s];\n", 
+                dot.append(String.format("    \"%s\" -> \"%s\" [label=\"%d\",color=%s,penwidth=%s];%n",
                     fromNode, toNode, weight, color, penwidth));
             }
         }
@@ -101,7 +102,7 @@ public class GraphVisualizer {
                     break;
                 }
             }
-            dot.append(String.format("    \"%s\" [fillcolor=%s];\n", node, color));
+            dot.append(String.format("    \"%s\" [fillcolor=%s];%n", node, color));
         }
         
         // 添加所有边
@@ -127,7 +128,7 @@ public class GraphVisualizer {
                     if (!color.equals("black")) break;
                 }
                 
-                dot.append(String.format("    \"%s\" -> \"%s\" [label=\"%d\",color=%s,penwidth=%s];\n", 
+                dot.append(String.format("    \"%s\" -> \"%s\" [label=\"%d\",color=%s,penwidth=%s];%n",
                     fromNode, toNode, weight, color, penwidth));
             }
         }
@@ -139,7 +140,7 @@ public class GraphVisualizer {
         dot.append("        fillcolor=white;\n");
         for (int i = 0; i < paths.size(); i++) {
             String color = colors[i % colors.length];
-            dot.append(String.format("        \"Path %d\" [fillcolor=%s];\n", i + 1, color));
+            dot.append(String.format("        \"Path %d\" [fillcolor=%s];%n", i + 1, color));
         }
         dot.append("    }\n");
         
@@ -154,7 +155,7 @@ public class GraphVisualizer {
         try {
             // 将DOT内容写入临时文件
             File tempFile = File.createTempFile("graph_", ".dot");
-            try (PrintWriter writer = new PrintWriter(tempFile)) {
+            try (PrintWriter writer = new PrintWriter(tempFile, StandardCharsets.UTF_8)) {
                 writer.write(dot);
             }
 
@@ -170,7 +171,9 @@ public class GraphVisualizer {
             }
             
             // 删除临时文件
-            tempFile.delete();
+            if (!tempFile.delete()) {
+                throw new IOException("Delete failed");
+            }
             
         } catch (IOException | InterruptedException e) {
             System.err.println("生成图形时出错: " + e.getMessage());

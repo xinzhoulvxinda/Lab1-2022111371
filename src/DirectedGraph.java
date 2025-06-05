@@ -104,9 +104,11 @@ public class DirectedGraph {
         toWord = toWord.toLowerCase();
         Map<String, Integer> incomingEdges = new HashMap<>();
         
-        for (String fromWord : adjacencyMap.keySet()) {
-            int weight = getEdgeWeight(fromWord, toWord);
-            if (weight > 0) {
+        for (Map.Entry<String, Map<String, Integer>> entry : adjacencyMap.entrySet()) {
+            String fromWord = entry.getKey();
+            Map<String, Integer> neighbors = entry.getValue();
+            Integer weight = neighbors.get(toWord);
+            if (weight != null && weight > 0) {
                 incomingEdges.put(fromWord, weight);
             }
         }
@@ -123,19 +125,21 @@ public class DirectedGraph {
         StringBuilder sb = new StringBuilder();
         sb.append("Directed Graph Structure:\n");
         
-        for (String fromWord : adjacencyMap.keySet()) {
+        for (Map.Entry<String, Map<String, Integer>> entry : adjacencyMap.entrySet()) {
+            String fromWord = entry.getKey();
+            Map<String, Integer> neighbors = entry.getValue();
+            
             sb.append(fromWord).append(" -> ");
             
-            Map<String, Integer> neighbors = adjacencyMap.get(fromWord);
             if (neighbors.isEmpty()) {
                 sb.append("[No outgoing edges]");
             } else {
                 boolean first = true;
-                for (Map.Entry<String, Integer> entry : neighbors.entrySet()) {
+                for (Map.Entry<String, Integer> neighborEntry : neighbors.entrySet()) {
                     if (!first) {
                         sb.append(", ");
                     }
-                    sb.append(entry.getKey()).append("(weight: ").append(entry.getValue()).append(")");
+                    sb.append(neighborEntry.getKey()).append("(weight: ").append(neighborEntry.getValue()).append(")");
                     first = false;
                 }
             }

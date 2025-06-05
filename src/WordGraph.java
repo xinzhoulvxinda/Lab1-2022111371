@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.*;
 
 /**
@@ -6,7 +8,7 @@ import java.util.*;
  */
 public class WordGraph {
     private DirectedGraph graph;
-    private Random random;
+    private SecureRandom random;
     private static final double DAMPING_FACTOR = 0.85; // Damping factor for PageRank algorithm
     private static final int MAX_ITERATIONS = 500; // Maximum iterations for PageRank algorithm
     
@@ -15,7 +17,7 @@ public class WordGraph {
      */
     public WordGraph() {
         graph = new DirectedGraph();
-        random = new Random();
+        random = new SecureRandom();
     }
     
     /**
@@ -24,7 +26,7 @@ public class WordGraph {
      * @throws IOException File reading exception
      */
     public void buildGraphFromFile(String filePath) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        BufferedReader reader = new BufferedReader(new FileReader(filePath, StandardCharsets.UTF_8));
         StringBuilder textBuilder = new StringBuilder();
         String line;
         
@@ -116,7 +118,8 @@ public class WordGraph {
         Map<String, Integer> neighborsOfWord1 = graph.getEdges(word1);
         
         // For each neighbor of word1, check if it also points to word2
-        for (String potentialBridge : neighborsOfWord1.keySet()) {
+        for (Map.Entry<String, Integer> entry : neighborsOfWord1.entrySet()) {
+            String potentialBridge = entry.getKey();
             if (graph.getEdgeWeight(potentialBridge, word2) > 0) {
                 bridgeWords.add(potentialBridge);
             }
@@ -175,7 +178,8 @@ public class WordGraph {
             Map<String, Integer> neighbors = graph.getEdges(currentWord);
             
             // For each neighbor of current word, check if it also points to next word
-            for (String potentialBridge : neighbors.keySet()) {
+            for (Map.Entry<String, Integer> entry : neighbors.entrySet()) {
+                String potentialBridge = entry.getKey();
                 if (graph.getEdgeWeight(potentialBridge, nextWord) > 0) {
                     bridgeWords.add(potentialBridge);
                 }
@@ -597,7 +601,7 @@ public class WordGraph {
         
         // Save result to file
         try {
-            PrintWriter writer = new PrintWriter("random_walk.txt");
+            PrintWriter writer = new PrintWriter("random_walk.txt", StandardCharsets.UTF_8);
             writer.println(result);
             writer.close();
             System.out.println("Random walk result saved to random_walk.txt");
@@ -614,7 +618,7 @@ public class WordGraph {
      */
     public static void main(String[] args) {
         WordGraph wordGraph = new WordGraph();
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in, StandardCharsets.UTF_8);
         String filePath = "";
         
         try {
